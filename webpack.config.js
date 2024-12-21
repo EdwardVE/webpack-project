@@ -1,18 +1,38 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin'); // Asegúrate de importar el plugin
 
 module.exports = {
-  entry: './src/index.js', // Archivo de entrada
+  entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js', // Archivo de salida
+    filename: 'bundle.js',
   },
   module: {
     rules: [
       {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader'], // Manejo de archivos CSS
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: 
+        {
+          loader: 'babel-loader',
+          options: {
+            presets: ["@babel/preset-env", "@babel/preset-react"],
+          },
+        }
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
-  mode: 'development', // Modo de desarrollo
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './public/index.html', // Archivo HTML base
+    }),
+  ],
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
+  mode: 'development',
 };
